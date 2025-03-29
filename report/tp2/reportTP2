@@ -1,0 +1,83 @@
+# Rapport - Application de Liste d'Épicerie
+
+## Ce que fait le projet
+
+Notre projet est une application simple de liste d'épicerie en ligne de commande qui permet de gérer les articles à acheter. L'utilisateur peut ajouter des articles, consulter sa liste et supprimer des articles qu'il ne souhaite plus acheter.
+
+L'application stocke la liste d'épicerie dans un fichier JSON, ce qui permet de conserver les informations même après avoir fermé le programme. C'est pratique pour maintenir une liste permanente qui peut être mise à jour au fil du temps.
+
+## Fonctionnalités principales
+
+1. **Ajouter un article** : On peut ajouter un article avec une quantité spécifique.
+   ```
+   java -jar ./target/dp-2024-2025__grocery-list-1.0-SNAPSHOT.jar -s groceries.json add "Lait" 2
+   ```
+
+2. **Voir la liste** : On peut afficher tous les articles de notre liste.
+   ```
+   java -jar ./target/dp-2024-2025__grocery-list-1.0-SNAPSHOT.jar -s groceries.json list
+   ```
+
+3. **Supprimer un article** : On peut enlever un article de la liste.
+   ```
+   java -jar ./target/dp-2024-2025__grocery-list-1.0-SNAPSHOT.jar -s groceries.json remove "Lait"
+   ```
+
+4. **Réduire la quantité** : On peut aussi réduire la quantité d'un article sans le supprimer complètement.
+   ```
+   java -jar ./target/dp-2024-2025__grocery-list-1.0-SNAPSHOT.jar -s groceries.json remove "Pain" 1
+   ```
+
+## Comment j'ai structuré mon code
+
+Pour organiser mon code, j'ai créé plusieurs classes qui ont chacune un rôle spécifique :
+
+### GroceryItem
+Cette classe représente un article dans notre liste d'épicerie. Chaque article a :
+- Un nom (comme "Lait" ou "Pain")
+- Une quantité (comme 2 bouteilles ou 1 baguette)
+
+C'est la base de notre application, car tout tourne autour des articles qu'on veut acheter.
+
+### Gestion des fichiers
+Pour stocker notre liste, j'ai créé :
+- Une interface **FileFormat** qui définit comment lire et écrire la liste
+- **JsonFormat** pour sauvegarder en JSON (le format principal)
+- **CsvFormat** pour sauvegarder en CSV (au cas où on voudrait exporter la liste)
+- Une classe **File** qui gère les opérations sur les fichiers
+
+Cette structure permet de facilement ajouter d'autres formats si besoin.
+
+### Actions sur la liste
+Pour manipuler la liste, j'ai créé :
+- **AddElement** pour gérer l'ajout d'articles
+- **RemoveElement** pour gérer la suppression d'articles
+- **GererListe** qui coordonne toutes les opérations et fait le lien entre l'interface utilisateur et le stockage
+
+### Interface utilisateur
+La classe **Main** s'occupe d'interpréter les commandes de l'utilisateur et d'appeler les bonnes méthodes dans GererListe.
+
+## Les défis que j'ai rencontrés
+
+### 1. Gestion des doublons
+Au début, quand j'ajoutais deux fois le même article (par exemple "Lait"), j'obtenais deux entrées séparées dans ma liste. J'ai résolu ce problème en utilisant une Map avec le nom de l'article comme clé, ce qui garantit l'unicité.
+
+### 2. Formats de fichier
+J'ai voulu que l'application soit flexible concernant le format de stockage. Créer une interface FileFormat m'a permis d'implémenter facilement différents formats sans changer le reste du code.
+
+### 3. Tests unitaires
+Écrire des tests pour les opérations sur les fichiers était compliqué car il fallait simuler un système de fichiers. J'ai utilisé @TempDir de JUnit pour créer des fichiers temporaires pendant les tests.
+
+## Ce que j'ai appris
+
+1. **L'importance de la séparation des responsabilités** : Avoir des classes distinctes pour chaque aspect du programme rend le code plus clair et plus facile à modifier.
+
+2. **Les avantages des interfaces** : Utiliser des interfaces comme FileFormat m'a permis de changer facilement l'implémentation sans toucher au reste du code.
+
+3. **Tests unitaires** : J'ai appris à tester chaque composant séparément, ce qui m'a aidé à trouver des bugs que je n'aurais pas vus autrement.
+
+4. **Gestion des erreurs** : J'ai compris l'importance de bien gérer les cas d'erreur (fichier inexistant, format incorrect, etc.).
+
+## Améliorations futures
+
+Nous pouvons ajouter des catégories pour organiser les articles (produits laitiers, fruits, etc.)

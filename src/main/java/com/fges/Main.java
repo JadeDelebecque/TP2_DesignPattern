@@ -1,24 +1,15 @@
 package com.fges;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static void main(String[] args) throws IOException {
         System.exit(exec(args));
@@ -49,68 +40,83 @@ public class Main {
 
         String command = positionalArgs.get(0);
 
-        // Load current grocery list state
-
-        Path filePath = Paths.get(fileName);
-
-        String fileContent = "";
-
-        List<String> groceryList;
-
-        if (Files.exists(filePath)) {
-            fileContent = Files.readString(filePath);
-
-            var parsedList = OBJECT_MAPPER.readValue(fileContent, new TypeReference<List<String>>() {
-            });
-            // Cast the list as an ArrayList to ensure its mutability
-            groceryList = new ArrayList<>(parsedList);
-        } else {
-            groceryList = new ArrayList<>();
+        // Création d'une instance de gestion de liste
+        GererListe gererListe;
+        try {
+            gererListe = new GererListe(fileName);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier: " + e.getMessage());
+            return 1;
         }
 
-        // interpret command
+        // Traitement des commandes
+        try {
+            switch (command) {
+                case "add" -> {
+                    if (positionalArgs.size() < 3) {
+                        System.err.println("Missing arguments");
+                        return 1;
+                    }
 
-        switch (command) {
-            case "add" -> {
-                if (positionalArgs.size() < 3) {
-                    System.err.println("Missing arguments");
+                    String itemName = positionalArgs.get(1);
+                    int quantity;
+                    try {
+                        quantity = Integer.parseInt(positionalArgs.get(2));
+                    } catch (NumberFormatException e) {
+                        System.err.println("La quantité doit être un nombre entier");
+                        return 1;
+                    }
+
+                    boolean success = gererListe.ajouter(itemName, quantity);
+                    if (!success) {
+                        System.err.println("Impossible d'ajouter l'article: quantité invalide");
+                        return 1;
+                    }
+                    return 0;
+                }
+                case "list" -> {
+                    gererListe.afficher();
+                    return 0;
+                }
+                case "remove" -> {
+                    if (positionalArgs.size() < 2) {
+                        System.err.println("Missing arguments");
+                        return 1;
+                    }
+
+                    String itemName = positionalArgs.get(1);
+
+                    if (positionalArgs.size() >= 3) {
+                        // Retrait d'une quantité spécifique
+                        try {
+                            int quantity = Integer.parseInt(positionalArgs.get(2));
+                            boolean success = gererListe.réduireQuantité(itemName, quantity);
+                            if (!success) {
+                                System.err.println("Impossible de réduire la quantité: article non trouvé ou quantité invalide");
+                                return 1;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.err.println("La quantité doit être un nombre entier");
+                            return 1;
+                        }
+                    } else {
+                        // Suppression complète de l'article
+                        boolean success = gererListe.enlever(itemName);
+                        if (!success) {
+                            System.err.println("Impossible de supprimer l'article: article non trouvé");
+                            return 1;
+                        }
+                    }
+                    return 0;
+                }
+                default -> {
+                    System.err.println("Unknown command: " + command);
                     return 1;
                 }
-
-                String itemName = positionalArgs.get(1);
-                int quantity = Integer.parseInt(positionalArgs.get(2));
-
-                groceryList.add(itemName + ": " + quantity);
-
-                var outputFile = new File(fileName);
-
-                OBJECT_MAPPER.writeValue(outputFile, groceryList);
-                return 0;
             }
-            case "list" -> {
-                for (String item : groceryList) {
-                    System.out.println(item);
-                }
-                return 0;
-            }
-            case "remove" -> {
-                if (positionalArgs.size() < 2) {
-                    System.err.println("Missing arguments");
-                    return 1;
-                }
-
-                String itemName = positionalArgs.get(1);
-                var newGroceryList = groceryList.stream()
-                        .filter(item -> !item.contains(itemName))
-                        .toList();
-
-                var outputFile = new File(fileName);
-
-                OBJECT_MAPPER.writeValue(outputFile, newGroceryList);
-                return 0;
-            }
-
-            default -> throw new IllegalArgumentException("Unknown command: " + command);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'écriture du fichier: " + e.getMessage());
+            return 1;
         }
     }
 }
