@@ -14,7 +14,6 @@ public class File {
         } else if (filePath.endsWith(".csv")) {
             this.format = new CsvFormat();
         } else {
-            // Format par défaut
             this.format = new JsonFormat();
         }
     }

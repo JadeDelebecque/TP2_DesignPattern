@@ -33,7 +33,6 @@ public class GererListe {
      */
     public void créerListe() throws IOException {
         this.items = new HashMap<>();
-        sauvegarder();
     }
 
     /**
@@ -49,7 +48,6 @@ public class GererListe {
         }
 
         items.get(name).setQuantity(quantity);
-        sauvegarder();
         return true;
     }
 
@@ -69,12 +67,9 @@ public class GererListe {
      * @return true si l'ajout a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public boolean ajouter(String name, int quantity) throws IOException {
-        boolean result = AddElement.ajouterElement(items, name, quantity);
-        if (result) {
-            sauvegarder();
-        }
-        return result;
+    public void ajouter(String name, int quantity) throws IOException {
+        AddElement addElement = new AddElement(this.fichier);
+        addElement.ajouterElement(name, quantity);
     }
 
     /**
@@ -85,9 +80,6 @@ public class GererListe {
      */
     public boolean enlever(String name) throws IOException {
         boolean result = RemoveElement.remove(items, name);
-        if (result) {
-            sauvegarder();
-        }
         return result;
     }
 
@@ -100,9 +92,6 @@ public class GererListe {
      */
     public boolean réduireQuantité(String name, int quantity) throws IOException {
         boolean result = RemoveElement.removeQuantité(items, name, quantity);
-        if (result) {
-            sauvegarder();
-        }
         return result;
     }
 
@@ -119,13 +108,6 @@ public class GererListe {
         }
     }
 
-    /**
-     * Sauvegarde la liste dans le fichier
-     * @throws IOException En cas d'erreur d'écriture
-     */
-    public void sauvegarder() throws IOException {
-        fichier.sortie(items);
-    }
 
     /**
      * Récupère la liste actuelle

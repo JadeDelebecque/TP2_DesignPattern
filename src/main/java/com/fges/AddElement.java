@@ -1,28 +1,30 @@
 package com.fges;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class AddElement {
-    public static boolean ajouterElement(Map<String, GroceryItem> items, String name, int quantity) {
+    private File file;
+    public AddElement(File file){
+        this.file = file;
+    }
+    public void ajouterElement(String name, int quantity) throws IOException {
+        var items = file.entrée();
+
         if (quantity <= 0) {
-            return false;
+            throw new IllegalArgumentException("La quantité doit être supérieure à zéro");
         }
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le nom de l'article ne peut pas être vide");
+        }
+
         for (String key : items.keySet()) {
             if (key.equalsIgnoreCase(name)) {
                 GroceryItem item = items.get(key);
                 item.setQuantity(item.getQuantity() + quantity);
-                return true;
             }
         }
         items.put(name, new GroceryItem(name, quantity));
-        return true;
-    }
-    public static boolean addSiNonExistant(Map<String, GroceryItem> items, String name, int quantity) {
-        if (quantity <= 0 || items.containsKey(name)) {
-            return false;
-        }
-
-        items.put(name, new GroceryItem(name, quantity));
-        return true;
+        file.sortie(items);
     }
 }

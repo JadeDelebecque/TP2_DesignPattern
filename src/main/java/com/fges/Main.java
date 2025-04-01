@@ -16,7 +16,6 @@ public class Main {
     }
 
     public static int exec(String[] args) throws IOException {
-        // Setup CLI interface
         Options cliOptions = new Options();
         CommandLineParser parser = new DefaultParser();
 
@@ -41,6 +40,7 @@ public class Main {
         String command = positionalArgs.get(0);
 
         // Création d'une instance de gestion de liste
+
         GererListe gererListe;
         try {
             gererListe = new GererListe(fileName);
@@ -49,10 +49,13 @@ public class Main {
             return 1;
         }
 
+
+
         // Traitement des commandes
         try {
             switch (command) {
                 case "add" -> {
+
                     if (positionalArgs.size() < 3) {
                         System.err.println("Missing arguments");
                         return 1;
@@ -66,13 +69,12 @@ public class Main {
                         System.err.println("La quantité doit être un nombre entier");
                         return 1;
                     }
-
-                    boolean success = gererListe.ajouter(itemName, quantity);
-                    if (!success) {
-                        System.err.println("Impossible d'ajouter l'article: quantité invalide");
+                    try {
+                        gererListe.ajouter(itemName, quantity);
+                    } catch (IllegalArgumentException e) {
+                        System.err.println(e.getMessage());
                         return 1;
                     }
-                    return 0;
                 }
                 case "list" -> {
                     gererListe.afficher();
@@ -118,5 +120,6 @@ public class Main {
             System.err.println("Erreur lors de l'écriture du fichier: " + e.getMessage());
             return 1;
         }
+        return 0;
     }
 }
