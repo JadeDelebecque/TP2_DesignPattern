@@ -7,13 +7,14 @@ public class AddElement {
         if (quantity <= 0) {
             return false;
         }
-
-        if (items.containsKey(name)) {
-            items.get(name).addQuantity(quantity);
-        } else {
-            items.put(name, new GroceryItem(name, quantity));
+        for (String key : items.keySet()) {
+            if (key.equalsIgnoreCase(name)) {
+                GroceryItem item = items.get(key);
+                item.setQuantity(item.getQuantity() + quantity);
+                return true;
+            }
         }
-
+        items.put(name, new GroceryItem(name, quantity));
         return true;
     }
     public static boolean addSiNonExistant(Map<String, GroceryItem> items, String name, int quantity) {

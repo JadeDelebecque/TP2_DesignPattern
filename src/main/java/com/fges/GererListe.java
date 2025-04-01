@@ -26,6 +26,7 @@ public class GererListe {
         this.items = this.fichier.entrée();
     }
 
+
     /**
      * Crée une nouvelle liste vide dans un fichier
      * @throws IOException En cas d'erreur d'écriture
