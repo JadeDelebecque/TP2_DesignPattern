@@ -18,13 +18,20 @@ public class AddElement {
             throw new IllegalArgumentException("Le nom de l'article ne peut pas être vide");
         }
 
+        boolean trouve = false;
         for (String key : items.keySet()) {
             if (key.equalsIgnoreCase(name)) {
                 GroceryItem item = items.get(key);
                 item.setQuantity(item.getQuantity() + quantity);
+                trouve = true;
+                break;
             }
         }
-        items.put(name, new GroceryItem(name, quantity));
+
+        if (!trouve) {
+            items.put(name, new GroceryItem(name, quantity));
+        }
+
         file.sortie(items);
     }
 }

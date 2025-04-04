@@ -40,7 +40,6 @@ public class Main {
         String command = positionalArgs.get(0);
 
         // Création d'une instance de gestion de liste
-
         GererListe gererListe;
         try {
             gererListe = new GererListe(fileName);
@@ -49,13 +48,10 @@ public class Main {
             return 1;
         }
 
-
-
         // Traitement des commandes
         try {
             switch (command) {
                 case "add" -> {
-
                     if (positionalArgs.size() < 3) {
                         System.err.println("Missing arguments");
                         return 1;
@@ -92,9 +88,10 @@ public class Main {
                         // Retrait d'une quantité spécifique
                         try {
                             int quantity = Integer.parseInt(positionalArgs.get(2));
-                            boolean success = gererListe.réduireQuantité(itemName, quantity);
-                            if (!success) {
-                                System.err.println("Impossible de réduire la quantité: article non trouvé ou quantité invalide");
+                            try {
+                                gererListe.réduireQuantité(itemName, quantity);
+                            } catch (IllegalArgumentException e) {
+                                System.err.println(e.getMessage());
                                 return 1;
                             }
                         } catch (NumberFormatException e) {
@@ -103,9 +100,10 @@ public class Main {
                         }
                     } else {
                         // Suppression complète de l'article
-                        boolean success = gererListe.enlever(itemName);
-                        if (!success) {
-                            System.err.println("Impossible de supprimer l'article: article non trouvé");
+                        try {
+                            gererListe.enlever(itemName);
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Impossible de supprimer l'article: " + e.getMessage());
                             return 1;
                         }
                     }

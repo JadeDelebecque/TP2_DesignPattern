@@ -1,33 +1,35 @@
 package com.fges;
 
 import java.util.Map;
+import java.io.IOException;
 
 /**
  * Classe pour gérer la suppression d'éléments de la liste
  */
 public class RemoveElement {
 
-    /**
-     * Supprime complètement un élément de la liste
-     * @param items Map des articles existants
-     * @param name Nom de l'article à supprimer
-     * @return true si l'élément a été supprimé, false sinon
-     */
-    public static boolean remove(Map<String, GroceryItem> items, String name) {
-        return items.remove(name) != null;
+    private File file;
+    public RemoveElement(File file){
+        this.file = file;
     }
 
     /**
-     * Réduit la quantité d'un élément de la liste
-     * Si la quantité devient ≤ 0, l'élément est supprimé
-     * @param items Map des articles existants
-     * @param name Nom de l'article
-     * @param quantity Quantité à retirer
-     * @return true si la quantité a été réduite, false sinon
+     * Supprime complètement un élément de la liste
+     * @param name liste des articles;
      */
-    public static boolean removeQuantité(Map<String, GroceryItem> items, String name, int quantity) {
+    public void remove(String name) throws IOException{
+        var items = file.entrée();
+        var suppresion = items.remove(name);
+        if (suppresion == null){
+            throw new  IllegalArgumentException("Le produit n'existe pas");
+        }
+        file.sortie(items);
+    }
+
+    public void removeQuantité(String name, int quantity) throws IOException{
+        var items = file.entrée();
         if (!items.containsKey(name) || quantity <= 0) {
-            return false;
+            throw new IllegalArgumentException("Element inconnus ou quantité <= 0");
         }
 
         GroceryItem item = items.get(name);
@@ -39,6 +41,7 @@ public class RemoveElement {
             item.setQuantity(newQuantity);
         }
 
-        return true;
+        file.sortie(items);
+
     }
 }

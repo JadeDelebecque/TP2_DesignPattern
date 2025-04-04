@@ -70,6 +70,7 @@ public class GererListe {
     public void ajouter(String name, int quantity) throws IOException {
         AddElement addElement = new AddElement(this.fichier);
         addElement.ajouterElement(name, quantity);
+        this.items = this.fichier.entrée();
     }
 
     /**
@@ -78,9 +79,10 @@ public class GererListe {
      * @return true si la suppression a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public boolean enlever(String name) throws IOException {
-        boolean result = RemoveElement.remove(items, name);
-        return result;
+    public void enlever(String name) throws IOException {
+        RemoveElement removeElement = new RemoveElement(this.fichier);
+        removeElement.remove(name);
+        this.items = this.fichier.entrée();
     }
 
     /**
@@ -90,9 +92,10 @@ public class GererListe {
      * @return true si la réduction a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public boolean réduireQuantité(String name, int quantity) throws IOException {
-        boolean result = RemoveElement.removeQuantité(items, name, quantity);
-        return result;
+    public void réduireQuantité(String name, int quantity) throws IOException {
+        RemoveElement removeElement = new RemoveElement(this.fichier);
+        removeElement.removeQuantité(name, quantity);
+        this.items = this.fichier.entrée();
     }
 
     /**
