@@ -20,6 +20,7 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
 
         cliOptions.addRequiredOption("s", "source", true, "File containing the grocery list");
+        cliOptions.addOption("c", "category", true, "Category of the item");
 
         CommandLine cmd;
         try {
@@ -30,6 +31,7 @@ public class Main {
         }
 
         String fileName = cmd.getOptionValue("s");
+        String category = cmd.getOptionValue("category");
 
         List<String> positionalArgs = cmd.getArgList();
         if (positionalArgs.isEmpty()) {
@@ -38,15 +40,8 @@ public class Main {
         }
 
         String command = positionalArgs.get(0);
-
-        // Création d'une instance de gestion de liste
-        GererListe gererListe;
-        try {
-            gererListe = new GererListe(fileName);
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la lecture du fichier: " + e.getMessage());
-            return 1;
-        }
+        File file = new File();
+        file.Fichier(fileName);
 
         // Traitement des commandes
         try {
@@ -65,15 +60,18 @@ public class Main {
                         System.err.println("La quantité doit être un nombre entier");
                         return 1;
                     }
+
+                    AddElement addElement = new AddElement(file);
                     try {
-                        gererListe.ajouter(itemName, quantity);
+                        addElement.ajouterElement(itemName, quantity, category);
                     } catch (IllegalArgumentException e) {
                         System.err.println(e.getMessage());
                         return 1;
                     }
                 }
                 case "list" -> {
-                    gererListe.afficher();
+                    ListCategory listCategory = new ListCategory(file);
+                    listCategory.listByCategory();
                     return 0;
                 }
                 case "remove" -> {
@@ -83,13 +81,14 @@ public class Main {
                     }
 
                     String itemName = positionalArgs.get(1);
+                    RemoveElement removeElement = new RemoveElement(file);
 
                     if (positionalArgs.size() >= 3) {
                         // Retrait d'une quantité spécifique
                         try {
                             int quantity = Integer.parseInt(positionalArgs.get(2));
                             try {
-                                gererListe.réduireQuantité(itemName, quantity);
+                                removeElement.removeQuantité(itemName, quantity);
                             } catch (IllegalArgumentException e) {
                                 System.err.println(e.getMessage());
                                 return 1;
@@ -101,7 +100,7 @@ public class Main {
                     } else {
                         // Suppression complète de l'article
                         try {
-                            gererListe.enlever(itemName);
+                            removeElement.remove(itemName);
                         } catch (IllegalArgumentException e) {
                             System.err.println("Impossible de supprimer l'article: " + e.getMessage());
                             return 1;

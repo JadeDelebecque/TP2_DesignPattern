@@ -25,7 +25,7 @@ public class CsvFormat implements FileFormat {
             for (String line : lines) {
                 if (isFirstLine) {
                     isFirstLine = false;
-                    if (line.startsWith("name") || line.startsWith("Nom")) {
+                    if (line.contains("Nom") || line.contains("name") || line.contains("Quantité") || line.contains("quantity")) {
                         continue;
                     }
                 }
@@ -34,7 +34,8 @@ public class CsvFormat implements FileFormat {
                 if (parts.length >= 2) {
                     String name = parts[0].trim();
                     int quantity = Integer.parseInt(parts[1].trim());
-                    items.put(name, new GroceryItem(name, quantity));
+                    String category = (parts.length >= 3) ? parts[2].trim() : "default";
+                    items.put(name, new GroceryItem(name, quantity, category));
                 }
             }
         }
@@ -46,11 +47,11 @@ public class CsvFormat implements FileFormat {
     public void write(String filePath, Map<String, GroceryItem> items) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             // Écrire l'en-tête
-            writer.write("Nom,Quantité\n");
+            writer.write("Nom,Quantité,Catégorie\n");
 
             // Écrire les articles
             for (GroceryItem item : items.values()) {
-                writer.write(item.getName() + "," + item.getQuantity() + "\n");
+                writer.write(item.getName() + "," + item.getQuantity() + "," + item.getCategory() + "\n");
             }
         }
     }
