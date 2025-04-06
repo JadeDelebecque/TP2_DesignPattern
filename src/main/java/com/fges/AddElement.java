@@ -46,7 +46,7 @@ public class AddElement {
 
         file.sortie(items);
     }
-    g
+
     public void ajouterElement(String name, int quantity) throws IOException {
         ajouterElement(name, quantity, "default");
     }
