@@ -58,4 +58,40 @@ public class GroceryItemTest {
         GroceryItem item = new GroceryItem("Cheese", 5);
         assertEquals("Cheese: 5", item.toString());
     }
+
+    @Test
+    public void testConstructorWithCategory() {
+        GroceryItem item = new GroceryItem("Milk", 10, "dairy");
+        assertEquals("Milk", item.getName());
+        assertEquals(10, item.getQuantity());
+        assertEquals("dairy", item.getCategory());
+    }
+
+    @Test
+    public void testDefaultCategory() {
+        GroceryItem item = new GroceryItem("Bread", 2);
+        assertEquals("default", item.getCategory());
+    }
+
+    @Test
+    public void testSetGetCategory() {
+        GroceryItem item = new GroceryItem();
+        item.setCategory("fruits");
+        assertEquals("fruits", item.getCategory());
+    }
+
+    @Test
+    public void testNullCategory() {
+        GroceryItem item = new GroceryItem("Apple", 5, null);
+        assertEquals("default", item.getCategory());
+    }
+
+    @Test
+    public void testEmptyCategory() {
+        GroceryItem item = new GroceryItem("Banana", 3, "");
+        assertEquals("default", item.getCategory());
+
+        item.setCategory("  ");
+        assertEquals("default", item.getCategory());
+    }
 }

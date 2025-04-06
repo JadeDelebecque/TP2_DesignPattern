@@ -82,4 +82,25 @@ public class CsvFormatTest {
         Map<String, GroceryItem> items = csvFormat.read(nonExistentFile.toString());
         assertTrue(items.isEmpty());
     }
+
+    @Test
+    public void testReadWithCategories() throws IOException {
+        // Create test file with categories
+        List<String> lines = Arrays.asList(
+                "Nom,Quantité,Catégorie",
+                "Lait,2,produits laitiers",
+                "Pomme,5,fruits",
+                "Pain,1,default"
+        );
+        Files.write(tempFile, lines);
+
+        // Read the file
+        Map<String, GroceryItem> items = csvFormat.read(tempFile.toString());
+
+        // Verify items and categories
+        assertEquals(3, items.size());
+        assertEquals("produits laitiers", items.get("Lait").getCategory());
+        assertEquals("fruits", items.get("Pomme").getCategory());
+        assertEquals("default", items.get("Pain").getCategory());
+    }
 }

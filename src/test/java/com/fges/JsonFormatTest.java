@@ -132,4 +132,38 @@ class JsonFormatTest {
         assertEquals(expectedItems, result);
         verify(mockFormat).read("any-file.json");
     }
+
+    @Test
+    void testWriteWithCategories() throws IOException {
+        // Create test data with categories
+        Map<String, GroceryItem> items = new HashMap<>();
+        items.put("Lait", new GroceryItem("Lait", 2, "produits laitiers"));
+        items.put("Pomme", new GroceryItem("Pomme", 5, "fruits"));
+        items.put("Pain", new GroceryItem("Pain", 1, "default"));
+
+        // Write to file
+        jsonFormat.write(testFilePath, items);
+
+        // Verify file was created
+        assertTrue(Files.exists(Path.of(testFilePath)));
+
+        // Read the content to verify the structure includes categories
+        String content = Files.readString(Path.of(testFilePath));
+        assertTrue(content.contains("\"name\""));
+        assertTrue(content.contains("\"quantity\""));
+        assertTrue(content.contains("\"category\""));
+        assertTrue(content.contains("\"produits laitiers\""));
+        assertTrue(content.contains("\"fruits\""));
+        assertTrue(content.contains("\"default\""));
+
+        // Test round-trip by reading back
+        Map<String, GroceryItem> readItems = jsonFormat.read(testFilePath);
+        assertEquals(3, readItems.size());
+        assertEquals("produits laitiers", readItems.get("Lait").getCategory());
+        assertEquals("fruits", readItems.get("Pomme").getCategory());
+        assertEquals("default", readItems.get("Pain").getCategory());
+    }
+
+
+
 }
