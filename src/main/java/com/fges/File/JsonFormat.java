@@ -1,9 +1,8 @@
-package com.fges;
+package com.fges.File;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fges.GroceryItem;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +13,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+/**
+ * Classe pour gerer la lecture et l'ecriture des listes dans le format Json
+ */
 
 public class JsonFormat implements FileFormat {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();

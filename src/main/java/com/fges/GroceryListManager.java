@@ -1,15 +1,21 @@
 package com.fges;
 
+import com.fges.Commande.AddElement;
+import com.fges.Commande.RemoveElement;
+import com.fges.File.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// FICHIER PLUS UTILISER
 /**
- * Classe principale pour gérer la liste d'épicerie
+ * Classe PLUS DU TOUT UTILISER
  */
-public class GererListe {
+public class GroceryListManager {
     private File fichier;
     private Map<String, GroceryItem> items;
     private String filePath;
@@ -19,11 +25,11 @@ public class GererListe {
      * @param filePath Chemin du fichier
      * @throws IOException En cas d'erreur de lecture du fichier
      */
-    public GererListe(String filePath) throws IOException {
+    public GroceryListManager(String filePath) throws IOException {
         this.filePath = filePath;
         this.fichier = new File();
-        this.fichier.Fichier(filePath);
-        this.items = this.fichier.entrée();
+        this.fichier.formatAFile(filePath);
+        this.items = this.fichier.loadFile();
     }
 
 
@@ -31,7 +37,7 @@ public class GererListe {
      * Crée une nouvelle liste vide dans un fichier
      * @throws IOException En cas d'erreur d'écriture
      */
-    public void créerListe() throws IOException {
+    public void createGroceryList() throws IOException {
         this.items = new HashMap<>();
     }
 
@@ -42,7 +48,7 @@ public class GererListe {
      * @return true si la modification a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public boolean modifier(String name, int quantity) throws IOException {
+    public boolean modifyGroceryList(String name, int quantity) throws IOException {
         if (!items.containsKey(name) || quantity <= 0) {
             return false;
         }
@@ -55,7 +61,7 @@ public class GererListe {
      * Supprime la liste entière
      * @throws IOException En cas d'erreur de suppression
      */
-    public void supprimer() throws IOException {
+    public void clearList() throws IOException {
         this.items.clear();
         Files.deleteIfExists(Paths.get(filePath));
     }
@@ -67,10 +73,10 @@ public class GererListe {
      * @return true si l'ajout a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public void ajouter(String name, int quantity) throws IOException {
+    public void addItem(String name, int quantity) throws IOException {
         AddElement addElement = new AddElement(this.fichier);
-        addElement.ajouterElement(name, quantity);
-        this.items = this.fichier.entrée();
+        addElement.addItemInGrocery(name, quantity);
+        this.items = this.fichier.loadFile();
     }
 
     /**
@@ -79,10 +85,10 @@ public class GererListe {
      * @return true si la suppression a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public void enlever(String name) throws IOException {
+    public void removeItem(String name) throws IOException {
         RemoveElement removeElement = new RemoveElement(this.fichier);
         removeElement.remove(name);
-        this.items = this.fichier.entrée();
+        this.items = this.fichier.loadFile();
     }
 
     /**
@@ -92,16 +98,16 @@ public class GererListe {
      * @return true si la réduction a réussi, false sinon
      * @throws IOException En cas d'erreur d'écriture
      */
-    public void réduireQuantité(String name, int quantity) throws IOException {
+    public void reduceQuantity(String name, int quantity) throws IOException {
         RemoveElement removeElement = new RemoveElement(this.fichier);
-        removeElement.removeQuantité(name, quantity);
-        this.items = this.fichier.entrée();
+        removeElement.removeQuantity(name, quantity);
+        this.items = this.fichier.loadFile();
     }
 
     /**
      * Affiche tous les éléments de la liste
      */
-    public void afficher() {
+    public void displayItems() {
         if (items.isEmpty()) {
             System.out.println("La liste est vide.");
         } else {
@@ -120,3 +126,6 @@ public class GererListe {
         return items;
     }
 }
+
+
+// LE FICHIER EST PLUS UTILISE PLUS DU TOUT

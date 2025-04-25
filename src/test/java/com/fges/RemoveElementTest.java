@@ -1,5 +1,7 @@
 package com.fges;
 
+import com.fges.Commande.RemoveElement;
+import com.fges.File.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +56,7 @@ public class RemoveElementTest {
         mockFile.setItems(items);
 
         // Act
-        removeElement.removeQuantité("Pommes", 3);
+        removeElement.removeQuantity("Pommes", 3);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -70,7 +72,7 @@ public class RemoveElementTest {
         mockFile.setItems(items);
 
         // Act
-        removeElement.removeQuantité("Pommes", 5);
+        removeElement.removeQuantity("Pommes", 5);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -85,7 +87,7 @@ public class RemoveElementTest {
         mockFile.setItems(items);
 
         // Act
-        removeElement.removeQuantité("Pommes", 10);
+        removeElement.removeQuantity("Pommes", 10);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -100,7 +102,7 @@ public class RemoveElementTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            removeElement.removeQuantité("Bananes", 3);
+            removeElement.removeQuantity("Bananes", 3);
         });
     }
 
@@ -113,11 +115,11 @@ public class RemoveElementTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            removeElement.removeQuantité("Pommes", 0);
+            removeElement.removeQuantity("Pommes", 0);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            removeElement.removeQuantité("Pommes", -3);
+            removeElement.removeQuantity("Pommes", -3);
         });
     }
 
@@ -134,12 +136,12 @@ public class RemoveElementTest {
         }
 
         @Override
-        public Map<String, GroceryItem> entrée() {
+        public Map<String, GroceryItem> loadFile() {
             return items;
         }
 
         @Override
-        public void sortie(Map<String, GroceryItem> items) {
+        public void saveFile(Map<String, GroceryItem> items) {
             this.items = items;
         }
     }

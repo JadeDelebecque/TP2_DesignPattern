@@ -1,4 +1,6 @@
-package com.fges;
+package com.fges.File;
+
+import com.fges.GroceryItem;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe pour gerer la lecture et l'ecriture des listes dans le format csv
+ */
 public class CsvFormat implements FileFormat {
 
     @Override

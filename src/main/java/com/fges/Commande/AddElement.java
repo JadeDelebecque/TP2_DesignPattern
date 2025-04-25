@@ -1,7 +1,9 @@
-package com.fges;
+package com.fges.Commande;
+
+import com.fges.File.File;
+import com.fges.GroceryItem;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Classe responsable d'ajouter des éléments à la liste d'épicerie
@@ -15,8 +17,8 @@ public class AddElement {
     }
 
 
-    public void ajouterElement(String name, int quantity, String category) throws IOException {
-        var items = file.entrée();
+    public void addItemInGrocery(String name, int quantity, String category) throws IOException {
+        var items = file.loadFile();
 
         if (quantity <= 0) {
             throw new IllegalArgumentException("La quantité doit être supérieure à zéro");
@@ -28,26 +30,26 @@ public class AddElement {
         // Si aucune catégorie n'est spécifiée, utiliser "default"
         String finalCategory = (category == null || category.trim().isEmpty()) ? "default" : category;
 
-        boolean trouve = false;
+        boolean itemFound = false;
         for (String key : items.keySet()) {
             if (key.equalsIgnoreCase(name)) {
                 GroceryItem item = items.get(key);
                 item.setQuantity(item.getQuantity() + quantity);
                 // Mettre à jour la catégorie
                 item.setCategory(finalCategory);
-                trouve = true;
+                itemFound = true;
                 break;
             }
         }
 
-        if (!trouve) {
+        if (!itemFound) {
             items.put(name, new GroceryItem(name, quantity, finalCategory));
         }
 
-        file.sortie(items);
+        file.saveFile(items);
     }
 
-    public void ajouterElement(String name, int quantity) throws IOException {
-        ajouterElement(name, quantity, "default");
+    public void addItemInGrocery(String name, int quantity) throws IOException {
+        addItemInGrocery(name, quantity, "default");
     }
 }

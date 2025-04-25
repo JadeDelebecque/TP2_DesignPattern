@@ -1,5 +1,7 @@
 package com.fges;
 
+import com.fges.Commande.ListCategory;
+import com.fges.File.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
@@ -65,16 +67,17 @@ public class ListCategoryTest {
     }
 
     @Test
-    public void testListEmptyItems() throws IOException {
+    public void testListEmptyItems() {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         mockFile.setItems(items);
 
-        // Act
-        listCategory.listByCategory();
-
-        // Assert
-        assertEquals("La liste est vide." + System.lineSeparator(), outContent.toString());
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> listCategory.listByCategory()
+        );
+        assertEquals("La liste est vide", exception.getMessage());
     }
 
     // Mock class for testing
@@ -86,12 +89,12 @@ public class ListCategoryTest {
         }
 
         @Override
-        public Map<String, GroceryItem> entrée() {
+        public Map<String, GroceryItem> loadFile() {
             return items;
         }
 
         @Override
-        public void sortie(Map<String, GroceryItem> items) {
+        public void saveFile(Map<String, GroceryItem> items) {
             this.items = items;
         }
     }

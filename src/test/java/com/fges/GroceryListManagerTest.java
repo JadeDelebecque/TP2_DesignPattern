@@ -11,16 +11,15 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 
-public class GererListeTest {
+public class GroceryListManagerTest {
 
     @TempDir
     Path tempDir;
 
     private Path tempFile;
-    private GererListe gererListe;
+    private GroceryListManager groceryListManager;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
@@ -33,7 +32,7 @@ public class GererListeTest {
         System.setOut(new PrintStream(outContent));
 
         // Initialize with empty file
-        gererListe = new GererListe(tempFile.toString());
+        groceryListManager = new GroceryListManager(tempFile.toString());
     }
 
     @AfterEach
@@ -43,17 +42,17 @@ public class GererListeTest {
 
     @Test
     public void testConstructor() {
-        assertNotNull(gererListe);
-        assertNotNull(gererListe.getItems());
+        assertNotNull(groceryListManager);
+        assertNotNull(groceryListManager.getItems());
     }
 
     @Test
     public void testAjouter() throws IOException {
         // Act
-        gererListe.ajouter("Pommes", 5);
+        groceryListManager.addItem("Pommes", 5);
 
         // Assert
-        Map<String, GroceryItem> items = gererListe.getItems();
+        Map<String, GroceryItem> items = groceryListManager.getItems();
         assertTrue(items.containsKey("Pommes"));
         assertEquals(5, items.get("Pommes").getQuantity());
     }
@@ -61,60 +60,60 @@ public class GererListeTest {
     @Test
     public void testEnlever() throws IOException {
         // Arrange
-        gererListe.ajouter("Pommes", 5);
+        groceryListManager.addItem("Pommes", 5);
 
         // Act
-        gererListe.enlever("Pommes");
+        groceryListManager.removeItem("Pommes");
 
         // Assert
-        Map<String, GroceryItem> items = gererListe.getItems();
+        Map<String, GroceryItem> items = groceryListManager.getItems();
         assertFalse(items.containsKey("Pommes"));
     }
 
     @Test
     public void testRéduireQuantité() throws IOException {
         // Arrange
-        gererListe.ajouter("Pommes", 10);
+        groceryListManager.addItem("Pommes", 10);
 
         // Act
-        gererListe.réduireQuantité("Pommes", 3);
+        groceryListManager.reduceQuantity("Pommes", 3);
 
         // Assert
-        Map<String, GroceryItem> items = gererListe.getItems();
+        Map<String, GroceryItem> items = groceryListManager.getItems();
         assertEquals(7, items.get("Pommes").getQuantity());
     }
 
     @Test
     public void testRéduireQuantitéComplètement() throws IOException {
         // Arrange
-        gererListe.ajouter("Pommes", 5);
+        groceryListManager.addItem("Pommes", 5);
 
         // Act
-        gererListe.réduireQuantité("Pommes", 5);
+        groceryListManager.reduceQuantity("Pommes", 5);
 
         // Assert
-        Map<String, GroceryItem> items = gererListe.getItems();
+        Map<String, GroceryItem> items = groceryListManager.getItems();
         assertFalse(items.containsKey("Pommes"));
     }
 
     @Test
-    public void testAfficherListeVide() {
+    public void testDisplayItemsListeVide() {
         // Act
-        gererListe.afficher();
+        groceryListManager.displayItems();
 
         // Assert
         assertEquals("La liste est vide." + System.lineSeparator(), outContent.toString());
     }
 
     @Test
-    public void testAfficherAvecElements() throws IOException {
+    public void testDisplayItemsAvecElements() throws IOException {
         // Arrange
-        gererListe.ajouter("Pommes", 5);
-        gererListe.ajouter("Lait", 2);
+        groceryListManager.addItem("Pommes", 5);
+        groceryListManager.addItem("Lait", 2);
         outContent.reset(); // Clear previous output
 
         // Act
-        gererListe.afficher();
+        groceryListManager.displayItems();
 
         // Assert
         String output = outContent.toString();
@@ -125,10 +124,10 @@ public class GererListeTest {
     @Test
     public void testGetItems() throws IOException {
         // Arrange
-        gererListe.ajouter("Pommes", 5);
+        groceryListManager.addItem("Pommes", 5);
 
         // Act
-        Map<String, GroceryItem> items = gererListe.getItems();
+        Map<String, GroceryItem> items = groceryListManager.getItems();
 
         // Assert
         assertNotNull(items);

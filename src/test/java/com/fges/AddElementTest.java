@@ -1,12 +1,13 @@
 package com.fges;
 
+import com.fges.Commande.AddElement;
+import com.fges.File.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.io.TempDir;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class AddElementTest {
         mockFile.setItems(items);
 
         // Act
-        addElement.ajouterElement("Pommes", 5);
+        addElement.addItemInGrocery("Pommes", 5);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -37,14 +38,14 @@ public class AddElementTest {
     }
 
     @Test
-    public void testAjouterElementExistant() throws IOException {
+    public void testAddItemInGroceryExistant() throws IOException {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         items.put("Lait", new GroceryItem("Lait", 2));
         mockFile.setItems(items);
 
         // Act
-        addElement.ajouterElement("Lait", 3);
+        addElement.addItemInGrocery("Lait", 3);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -52,14 +53,14 @@ public class AddElementTest {
     }
 
     @Test
-    public void testAjouterElementCasInsensitive() throws IOException {
+    public void testAddItemInGroceryCasInsensitive() throws IOException {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         items.put("Lait", new GroceryItem("Lait", 2));
         mockFile.setItems(items);
 
         // Act
-        addElement.ajouterElement("lait", 3);
+        addElement.addItemInGrocery("lait", 3);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -67,50 +68,50 @@ public class AddElementTest {
     }
 
     @Test
-    public void testAjouterElementQuantiteInvalide() {
+    public void testAddItemInGroceryQuantiteInvalide() {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         mockFile.setItems(items);
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            addElement.ajouterElement("Pommes", 0);
+            addElement.addItemInGrocery("Pommes", 0);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            addElement.ajouterElement("Pommes", -5);
+            addElement.addItemInGrocery("Pommes", -5);
         });
     }
 
     @Test
-    public void testAjouterElementNomInvalide() {
+    public void testAddItemInGroceryNomInvalide() {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         mockFile.setItems(items);
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            addElement.ajouterElement(null, 5);
+            addElement.addItemInGrocery(null, 5);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            addElement.ajouterElement("", 5);
+            addElement.addItemInGrocery("", 5);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            addElement.ajouterElement("  ", 5);
+            addElement.addItemInGrocery("  ", 5);
         });
     }
 
 
     @Test
-    public void testAjouterElementAvecCategorie() throws IOException {
+    public void testAddItemInGroceryAvecCategorie() throws IOException {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         mockFile.setItems(items);
 
         // Act
-        addElement.ajouterElement("Lait", 5, "produits laitiers");
+        addElement.addItemInGrocery("Lait", 5, "produits laitiers");
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -120,13 +121,13 @@ public class AddElementTest {
     }
 
     @Test
-    public void testAjouterElementSansCategorie() throws IOException {
+    public void testAddItemInGrocerySansCategorie() throws IOException {
         // Arrange
         Map<String, GroceryItem> items = new HashMap<>();
         mockFile.setItems(items);
 
         // Act
-        addElement.ajouterElement("Lait", 5);
+        addElement.addItemInGrocery("Lait", 5);
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -142,7 +143,7 @@ public class AddElementTest {
         mockFile.setItems(items);
 
         // Act
-        addElement.ajouterElement("Lait", 3, "produits laitiers");
+        addElement.addItemInGrocery("Lait", 3, "produits laitiers");
 
         // Assert
         Map<String, GroceryItem> result = mockFile.getItems();
@@ -164,12 +165,12 @@ public class AddElementTest {
         }
 
         @Override
-        public Map<String, GroceryItem> entrée() {
+        public Map<String, GroceryItem> loadFile() {
             return items;
         }
 
         @Override
-        public void sortie(Map<String, GroceryItem> items) {
+        public void saveFile(Map<String, GroceryItem> items) {
             this.items = items;
         }
     }

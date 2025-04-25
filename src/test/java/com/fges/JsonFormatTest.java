@@ -1,5 +1,7 @@
 package com.fges;
 
+import com.fges.File.FileFormat;
+import com.fges.File.JsonFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -74,6 +76,7 @@ class JsonFormatTest {
         assertTrue(result.isEmpty());
     }
 
+    // Vu que on a des categories on a le meme test que TestWriteCategory
     @Test
     void testWrite() throws IOException {
         // Create test data
@@ -87,16 +90,21 @@ class JsonFormatTest {
         // Verify file was created
         assertTrue(Files.exists(Path.of(testFilePath)));
 
-        // Read the content to verify
+        // Read the content to verify the structure includes all required fields
         String content = Files.readString(Path.of(testFilePath));
-        assertTrue(content.contains("Apple: 5"));
-        assertTrue(content.contains("Banana: 3"));
+        assertTrue(content.contains("\"name\":\"Apple\""));
+        assertTrue(content.contains("\"quantity\":5"));
+        assertTrue(content.contains("\"name\":\"Banana\""));
+        assertTrue(content.contains("\"quantity\":3"));
+        assertTrue(content.contains("\"category\":\"default\""));
 
         // Test round-trip by reading back
         Map<String, GroceryItem> readItems = jsonFormat.read(testFilePath);
         assertEquals(2, readItems.size());
         assertEquals(5, readItems.get("Apple").getQuantity());
         assertEquals(3, readItems.get("Banana").getQuantity());
+        assertEquals("default", readItems.get("Apple").getCategory());
+        assertEquals("default", readItems.get("Banana").getCategory());
     }
 
     @Test

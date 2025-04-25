@@ -1,8 +1,8 @@
 package com.fges;
 
+import com.fges.File.CsvFormat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,8 +72,22 @@ public class CsvFormatTest {
 
         List<String> lines = Files.readAllLines(tempFile);
         assertEquals(3, lines.size());
-        assertEquals("Nom,Quantité", lines.get(0));
-        assertTrue(lines.contains("Milk,10") || lines.contains("Eggs,12"));
+        assertEquals("Nom,Quantité,Catégorie", lines.get(0));
+
+        // Vérifier que chaque ligne contient les informations correctes
+        boolean foundMilk = false;
+        boolean foundEggs = false;
+
+        for (int i = 1; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (line.startsWith("Milk,10,")) {
+                foundMilk = true;
+            } else if (line.startsWith("Eggs,12,")) {
+                foundEggs = true;
+            }
+        }
+
+        assertTrue(foundMilk && foundEggs, "Les lignes attendues n'ont pas été trouvées");
     }
 
     @Test

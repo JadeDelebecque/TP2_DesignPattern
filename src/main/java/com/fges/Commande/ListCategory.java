@@ -1,4 +1,7 @@
-package com.fges;
+package com.fges.Commande;
+
+import com.fges.File.File;
+import com.fges.GroceryItem;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,17 +14,20 @@ import java.util.TreeMap;
 public class ListCategory {
     private File file;
 
-
     public ListCategory(File file) {
+
         this.file = file;
     }
 
     public void listByCategory() throws IOException {
-        Map<String, GroceryItem> items = file.entrée();
+        /*
+        * Liste les éléments par catégories
+        */
+        Map<String, GroceryItem> items = file.loadFile();
 
         if (items.isEmpty()) {
-            System.out.println("La liste est vide.");
-            return;
+            throw new IllegalArgumentException("La liste est vide");
+
         }
 
         // Regrouper les éléments par catégorie

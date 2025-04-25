@@ -1,4 +1,6 @@
-package com.fges;
+package com.fges.File;
+
+import com.fges.GroceryItem;
 
 import java.util.Map;
 import java.io.IOException;
@@ -7,7 +9,10 @@ public class File {
     private FileFormat format;
     private String filePath;
 
-    public void Fichier(String filePath) {
+    public void formatAFile(String filePath) {
+        /*
+        * Permet de formatter un fichier dont on ne connait pas le format de base
+        */
         this.filePath = filePath;
         if (filePath.endsWith(".json")) {
             this.format = new JsonFormat();
@@ -18,19 +23,24 @@ public class File {
         }
     }
 
-    public void Fichier(String filePath, FileFormat format) {
+    public void formatAFile(String filePath, FileFormat format) {
+        /*
+        * Formatte un fichier dont on connais le format */
         this.filePath = filePath;
         this.format = format;
     }
 
-    public Map<String, GroceryItem> entrée() throws IOException {
+    public Map<String, GroceryItem> loadFile() throws IOException {
         return format.read(filePath);
     }
-    public void sortie(Map<String, GroceryItem> items) throws IOException {
+    public void saveFile(Map<String, GroceryItem> items) throws IOException {
         format.write(filePath, items);
     }
     public void modification(Map<String, GroceryItem> items) throws IOException {
-        sortie(items);
+        saveFile(items);
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
 }
