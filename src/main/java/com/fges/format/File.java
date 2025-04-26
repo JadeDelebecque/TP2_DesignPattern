@@ -1,4 +1,6 @@
-package com.fges;
+package com.fges.format;
+
+import com.fges.GroceryItem;
 
 import java.util.Map;
 import java.io.IOException;

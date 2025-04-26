@@ -1,5 +1,7 @@
 package com.fges;
 
+import com.fges.format.File;
+import com.fges.format.FileFormat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;

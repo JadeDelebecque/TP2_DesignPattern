@@ -1,4 +1,6 @@
-package com.fges;
+package com.fges.format;
+
+import com.fges.GroceryItem;
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,7 +1,8 @@
-package com.fges;
+package com.fges.format;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fges.GroceryItem;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,0 +1,39 @@
+Hello Carlos
+
+Je te fais un fichier directement dans le projet pour expliquer tout ce que j'ai fais parce que c'est quand même vraiment pas mal de changement.
+
+Je crois si je me souviens bien que notre gros soucis principalement c'était vraiment notre main qui gérait trop de chose, donc j'ai essayé de trouver une solution pour régler ce soucis là (regarde la class main à la toute fin de la lecture de ce fichier pour plus de suspense)
+
+Si j'ai bien compris le cours, il fallait eviter qu'en cas de moficiation, tu dois tout changer dans pleins de fichiers, et là on avait un main avec un ENORME switch dans lequel on rajoutait nos commandes et c'était un peu le zbeul
+
+Donc PEUT ETRE (on verra avec Anthony) la solution de mettre les commande à chaque fois dans une classe pour que le main ait à gérer seulement le "lancement" de la commande ça devrait pas être trop déconnant (peut être je suis à coté de la plaque, c'est fort possible).
+
+J'en ai profité aussi, parce qu'en voulant créer les class c'était un bordel dans le dossier, donc comme j'aime trop créer pleins de dossiers, bah j'en ai créé pleins xD
+
+Donc la on a un dossier commands, un dossier format (pour gérer le fileFormat, Csv, json et compagnie), et j'aimerai bien faire un dossier "donnée" mais je me dis que c'est peut être vraiment trop abusé (j'attends ton avis avant de tout bouger quoi)
+
+DU COUPS dans command :
+J'ai fait en sorte d'encapsuler chaque commande dans sa propre classe pour éviter le switch
+
+J'ai fais une *interface* Command qui définit ce que toutes les commandes doivent pouvoir faire :
+   - `execute()` : exécute la commande
+   - `canHandle()` : vérifie si la commande peut traiter un nom de commande donné
+   - `getUsage()` : renvoie une description de comment utiliser la commande
+
+Y'a la class "AbstractCommand" qui mets les trucs en communs à toutes les commandes et qui parse les arguments (en réalité c'est en lisant des trucs que j'ai vu la nécessité de la clase abstraite mais je crois que j'ai pas bien compris a quoi elle servait, si t'as une idée... Sinon je demanderai à Anthony).
+
+Y'a 2 types de commandes :
+ - `FileRequiredCommand` : pour les commandes qui ont besoin d'un fichier (add, list, remove)
+   - `SystemCommand` : pour les commandes qui n'ont pas besoin de fichier (comme notre nouvelle commande "info")
+
+Le plus beau dans tout ça, c'est que j'ai réutilisé la logique déjà en place ! Par exemple, `AddCommand` utilise toujours la méthode `ajouterElement()` de notre classe `AddElement`. J'ai juste réorganisé comment on y accède.
+
+ET LA regarde la class main comment elle est trop BELLE
+
+Donc maintenant on a plus de switch case, le main il fait :
+- récupérer la commande
+- factory crée la bonne commande
+- exécute la commande
+
+DONC MAINTENANT quand on veut ajouter une commande, bah on crée une classe et POUF c'est bon (faut pas oublier de la mettre dans commandFactory)
+
