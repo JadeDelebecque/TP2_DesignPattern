@@ -34,6 +34,10 @@ public class CommandeManager {
                     handleRemoveCommand(args);
                     break;
                 }
+                case "info" -> {
+                    handleInfoCommand();
+                    break;
+                }
                 default -> {
                     throw new IllegalArgumentException("Commande Inconnu");
                 }
@@ -43,6 +47,11 @@ public class CommandeManager {
             throw new IllegalArgumentException("Erreur lors de l'ecriture du fichier");
 
         }
+    }
+
+    public void handleInfoCommand() {
+        InfoCommand infoCommand = new InfoCommand();
+        infoCommand.displaySystemInfo();
     }
 
     public void  handleAddCommand(List<String> args, String category) throws IOException {
