@@ -22,6 +22,23 @@ public class File {
             this.format = new JsonFormat();
         }
     }
+    public void formatAFileWithSpecifiedFormat(String filePath, String specifiedFormat) {
+        this.filePath = filePath;
+
+        // Set format based on command line option
+        switch (specifiedFormat.toLowerCase()) {
+            case "csv":
+                this.format = new CsvFormat();
+                break;
+            case "json":
+                this.format = new JsonFormat();
+                break;
+            default:
+                // Default to JSON if format is unrecognized
+                System.err.println("Unrecognized format: " + specifiedFormat + ". Using JSON format.");
+                this.format = new JsonFormat();
+        }
+    }
 
     public void formatAFile(String filePath, FileFormat format) {
         /*

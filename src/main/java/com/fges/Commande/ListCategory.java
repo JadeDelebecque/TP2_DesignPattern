@@ -1,25 +1,26 @@
 package com.fges.Commande;
 
+import com.fges.CLI.CommandContext;
 import com.fges.File.File;
 import com.fges.GroceryItem;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * Classe pour gérer l'affichage des catégories
  */
-public class ListCategory {
-    private File file;
+public class ListCategory implements Command {
+    private final File file;
 
     public ListCategory(File file) {
-
         this.file = file;
     }
 
-    public void listByCategory() throws IOException {
+    public void execute(List<String> args, CommandContext context) throws IOException {
         /*
         * Liste les éléments par catégories
         */

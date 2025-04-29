@@ -1,32 +1,31 @@
 package com.fges.Commande;
 
+import com.fges.CLI.CommandContext;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Classe responsable d'afficher les informations système
  * Cette commande affiche la date du jour, le nom du système d'exploitation et la version de Java
  */
-public class InfoCommand {
+public class InfoCommand implements Command {
+    @Override
+    public void execute(List<String> args, CommandContext context) throws IOException {
+        displaySystemInfo();
+    }
 
-    /**
-     * Affiche les informations système
-     * - La date du jour
-     * - Le nom du système d'exploitation
-     * - La version de Java
-     */
-    public void displaySystemInfo() {
-        // Afficher la date du jour
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println("Today's date: " + today.format(formatter));
 
-        // Afficher le nom du système d'exploitation
-        String osName = System.getProperty("os.name");
-        System.out.println("Operating System: " + osName);
+    public void displaySystemInfo(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
 
-        // Afficher la version de Java
-        String javaVersion = System.getProperty("java.version");
-        System.out.println("Java version: " + javaVersion);
+        System.out.println("Today's date: " + formatter.format(date));
+        System.out.println("Operating System: " + System.getProperty("os.name"));
+        System.out.println("Java version: " + System.getProperty("java.version"));
     }
 }

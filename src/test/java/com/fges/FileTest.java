@@ -112,4 +112,56 @@ public class FileTest {
         assertTrue(readItems.containsKey("Apple"));
         assertEquals(7, readItems.get("Apple").getQuantity());
     }
+
+    @Test
+    public void testFormatWithSpecifiedFormat() throws IOException {
+        // Test JSON format specified for a file with non-JSON extension
+        File jsonFormatFile = new File();
+        jsonFormatFile.formatAFileWithSpecifiedFormat(csvFile.toString(), "json");
+
+        // Save data using the JSON format
+        Map<String, GroceryItem> jsonItems = new HashMap<>();
+        jsonItems.put("Chocolate", new GroceryItem("Chocolate", 3));
+        jsonFormatFile.saveFile(jsonItems);
+
+        // Test CSV format specified for a file with non-CSV extension
+        File csvFormatFile = new File();
+        csvFormatFile.formatAFileWithSpecifiedFormat(jsonFile.toString(), "csv");
+
+        // Save data using the CSV format
+        Map<String, GroceryItem> csvItems = new HashMap<>();
+        csvItems.put("Banana", new GroceryItem("Banana", 5));
+        csvFormatFile.saveFile(csvItems);
+
+        // Verify that the files can be read back with the correct format
+        File jsonReader = new File();
+        jsonReader.formatAFileWithSpecifiedFormat(csvFile.toString(), "json");
+        Map<String, GroceryItem> readJsonItems = jsonReader.loadFile();
+
+        File csvReader = new File();
+        csvReader.formatAFileWithSpecifiedFormat(jsonFile.toString(), "csv");
+        Map<String, GroceryItem> readCsvItems = csvReader.loadFile();
+
+        // Assert that the items were correctly saved and loaded
+        assertTrue(readJsonItems.containsKey("Chocolate"));
+        assertEquals(3, readJsonItems.get("Chocolate").getQuantity());
+
+        assertTrue(readCsvItems.containsKey("Banana"));
+        assertEquals(5, readCsvItems.get("Banana").getQuantity());
+    }
+
+    @Test
+    public void testFormatWithInvalidSpecifiedFormat() {
+        File file = new File();
+
+        // Test with an invalid format - should default to JSON
+        file.formatAFileWithSpecifiedFormat("test.dat", "unknown");
+
+        // Since we can't directly test the private format field,
+        // we can verify the file path was set correctly
+        assertEquals("test.dat", file.getFilePath());
+
+        // The test passes if no exception is thrown
+        assertDoesNotThrow(() -> file.formatAFileWithSpecifiedFormat("test.dat", "unknown"));
+    }
 }
