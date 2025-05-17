@@ -40,7 +40,6 @@ public class Main {
 
         CommandContext context = new CommandContext();
 
-
         // Parser les arguments
         try {
             cmdHandler.parse(options);
@@ -54,10 +53,11 @@ public class Main {
         context.setCategory(cmdHandler.getOptionValue("category"));
 
         // Initialiser le fichier
-        // In Main.java, update the file initialization section
         File file = new File();
-        if (command.equals("info") && !cmdHandler.hasOption("s")) {
-            // Pour la commande info sans fichier spécifié, utiliser un fichier temporaire
+
+        // Utiliser la nouvelle méthode pour vérifier si un fichier source est nécessaire
+        if (!cmdHandler.requiresSourceFile(command) && !cmdHandler.hasOption("s")) {
+            // Pour les commandes ne nécessitant pas de fichier source, utiliser un fichier temporaire
             file.formatAFile("dummy.json");
         } else {
             String fileName = cmdHandler.getOptionValue("s");

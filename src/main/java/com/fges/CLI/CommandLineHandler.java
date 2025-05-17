@@ -34,6 +34,16 @@ public class CommandLineHandler {
     }
 
     /**
+     * Vérifie si une commande nécessite un fichier source
+     * @param commandName Nom de la commande à vérifier
+     * @return true si la commande nécessite un fichier source
+     */
+    public boolean requiresSourceFile(String commandName) {
+        // Actuellement seule la commande info ne nécessite pas de fichier source
+        return !("info".equals(commandName) || "help".equals(commandName));
+    }
+
+    /**
      * Analyse les arguments avec les options définies
      * @param options Options de ligne de commande
      * @return true si le parsing est réussi
