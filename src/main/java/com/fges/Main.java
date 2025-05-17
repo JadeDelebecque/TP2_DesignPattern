@@ -5,9 +5,6 @@ import com.fges.CLI.CommandLineHandler;
 import com.fges.CLI.CommandOptions;
 import com.fges.Commande.CommandeManager;
 import com.fges.File.File;
-import com.fges.Web.SimpleGroceryShop;
-import fr.anthonyquere.GroceryShopServer;
-import fr.anthonyquere.MyGroceryShop;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,23 +31,7 @@ public class Main {
             throw new IllegalArgumentException("Erreur : Commande manquante");
         }
 
-        // Vérifier si la commande est "server"
-        if (args.length > 0 && "server".equals(args[0])) {
-            // Lancer le serveur web
-            int port = 8080;
-            if (args.length > 1) {
-                try {
-                    port = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    System.err.println("Port invalide, utilisation du port 8080 par défaut");
-                }
-            }
-
-            startServer(port);
-            return 0;
-        }
-
-        // Traitement des autres commandes comme avant
+        // Traitement des commandes
         CommandLineHandler cmdHandler = new CommandLineHandler(args);
         CommandOptions options = new CommandOptions();
 
@@ -74,21 +55,7 @@ public class Main {
 
         // Initialiser le fichier
         File file = new File();
-        if (command.equals("info") && !cmdHandler.hasOption("s")) {
-            file.formatAFile("dummy.json");
-        } else {
-            String fileName = cmdHandler.getOptionValue("s");
-
-            String formatOption = cmdHandler.hasOption("f") ?
-                    cmdHandler.getOptionValue("f") :
-                    cmdHandler.getOptionValue("format");
-
-            if (formatOption != null) {
-                file.formatAFileWithSpecifiedFormat(fileName, formatOption);
-            } else {
-                file.formatAFile(fileName);
-            }
-        }
+        options.configureFile(command, cmdHandler, file);
 
         // Création du CommandeManager avec le registre de commandes
         CommandeManager commandeManager = new CommandeManager(file);
@@ -105,24 +72,6 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Erreur d'E/S: " + e.getMessage());
             return 1;
-        }
-    }
-
-    /**
-     * Démarre le serveur web d'épicerie
-     * @param port Port sur lequel démarrer le serveur
-     */
-    private static void startServer(int port) {
-        MyGroceryShop groceryShop = new SimpleGroceryShop();
-        GroceryShopServer server = new GroceryShopServer(groceryShop);
-        server.start(port);
-
-        System.out.println("Serveur d'épicerie démarré sur http://localhost:" + port);
-
-        try {
-            Thread.currentThread().join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 }

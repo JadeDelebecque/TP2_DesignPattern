@@ -1,5 +1,6 @@
 package com.fges.CLI;
 
+import com.fges.File.File;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -74,5 +75,28 @@ public class CommandOptions {
      */
     public Options getOptions() {
         return options;
+    }
+
+    /**
+     * Configure le fichier selon la commande et les options
+     * @param command Nom de la commande
+     * @param cmdHandler Gestionnaire de ligne de commande
+     * @param file Objet File à configurer
+     */
+    public void configureFile(String command, CommandLineHandler cmdHandler, File file) {
+        if ("info".equals(command) && !cmdHandler.hasOption("s")) {
+            // Pour la commande info sans option -s, on ne fait rie
+        } else if (cmdHandler.hasOption("s")) {
+            String fileName = cmdHandler.getOptionValue("s");
+            String formatOption = cmdHandler.hasOption("f") ?
+                    cmdHandler.getOptionValue("f") :
+                    cmdHandler.getOptionValue("format");
+
+            if (formatOption != null) {
+                file.formatAFileWithSpecifiedFormat(fileName, formatOption);
+            } else {
+                file.formatAFile(fileName);
+            }
+        }
     }
 }

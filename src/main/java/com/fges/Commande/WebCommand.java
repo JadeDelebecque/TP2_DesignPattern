@@ -30,7 +30,9 @@ public class WebCommand implements Command {
             }
         }
 
-        MyGroceryShop groceryShop = new SimpleGroceryShop();
+        System.out.println("Démarrage du serveur sur le port " + port + " avec le fichier: " + file);
+
+        MyGroceryShop groceryShop = new SimpleGroceryShop(file);
         GroceryShopServer server = new GroceryShopServer(groceryShop);
         server.start(port);
 
