@@ -55,7 +55,6 @@ public class Main {
         // Initialiser le fichier
         File file = new File();
 
-        // Utiliser la nouvelle méthode pour vérifier si un fichier source est nécessaire
         if (!cmdHandler.requiresSourceFile(command) && !cmdHandler.hasOption("s")) {
             // Pour les commandes ne nécessitant pas de fichier source, utiliser un fichier temporaire
             file.formatAFile("dummy.json");

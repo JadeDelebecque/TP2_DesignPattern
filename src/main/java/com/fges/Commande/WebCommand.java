@@ -2,7 +2,7 @@ package com.fges.Commande;
 
 import com.fges.CLI.CommandContext;
 import com.fges.File.File;
-import com.fges.Web.GroceryShopAdapter;
+import com.fges.Web.SimpleGroceryShop;
 import fr.anthonyquere.GroceryShopServer;
 import fr.anthonyquere.MyGroceryShop;
 
@@ -34,8 +34,8 @@ public class WebCommand implements Command {
             throw new IllegalArgumentException("Le port doit être un nombre");
         }
 
-        // Créer l'adaptateur et le serveur
-        MyGroceryShop groceryShop = new GroceryShopAdapter(file);
+        // Créer l'adaptateur et le serveur en utilisant le fichier existant
+        MyGroceryShop groceryShop = new SimpleGroceryShop(file);
         GroceryShopServer server = new GroceryShopServer(groceryShop);
 
         // Démarrer le serveur

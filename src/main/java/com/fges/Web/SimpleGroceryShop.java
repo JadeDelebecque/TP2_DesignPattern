@@ -12,21 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GroceryShopAdapter implements MyGroceryShop {
-
+public class SimpleGroceryShop implements MyGroceryShop {
     private final File file;
 
-    public GroceryShopAdapter(File file) {
+    public SimpleGroceryShop(File file) {
         this.file = file;
     }
 
     @Override
     public List<WebGroceryItem> getGroceries() {
         try {
-            Map<String, GroceryItem> groceries = file.loadFile();
+            Map<String, GroceryItem> itemsFromFile = file.loadFile();
             List<WebGroceryItem> result = new ArrayList<>();
 
-            for (GroceryItem item : groceries.values()) {
+            for (GroceryItem item : itemsFromFile.values()) {
                 result.add(new WebGroceryItem(
                         item.getName(),
                         item.getQuantity(),
@@ -44,16 +43,16 @@ public class GroceryShopAdapter implements MyGroceryShop {
     @Override
     public void addGroceryItem(String name, int quantity, String category) {
         try {
-            Map<String, GroceryItem> groceries = file.loadFile();
+            Map<String, GroceryItem> items = file.loadFile();
 
-            if (groceries.containsKey(name)) {
-                GroceryItem existingItem = groceries.get(name);
+            if (items.containsKey(name)) {
+                GroceryItem existingItem = items.get(name);
                 existingItem.setQuantity(existingItem.getQuantity() + quantity);
             } else {
-                groceries.put(name, new GroceryItem(name, quantity, category));
+                items.put(name, new GroceryItem(name, quantity, category));
             }
 
-            file.saveFile(groceries);
+            file.saveFile(items);
         } catch (IOException e) {
             System.err.println("Erreur lors de l'ajout d'un élément: " + e.getMessage());
         }
@@ -62,9 +61,9 @@ public class GroceryShopAdapter implements MyGroceryShop {
     @Override
     public void removeGroceryItem(String name) {
         try {
-            Map<String, GroceryItem> groceries = file.loadFile();
-            groceries.remove(name);
-            file.saveFile(groceries);
+            Map<String, GroceryItem> items = file.loadFile();
+            items.remove(name);
+            file.saveFile(items);
         } catch (IOException e) {
             System.err.println("Erreur lors de la suppression d'un élément: " + e.getMessage());
         }
