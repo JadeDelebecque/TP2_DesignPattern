@@ -21,6 +21,7 @@ public class CommandRegistry {
         register("remove", new RemoveElement(file));
         register("info", new InfoCommand());
         register("display", new DisplayList(file));
+        register("web", new WebCommand(file));
 
         // ajouter commande ici -> renvoie vers le fichier de la commande
     }

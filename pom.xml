@@ -8,6 +8,13 @@
     <artifactId>dp-2024-2025__grocery-list</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <repositories>
+        <repository>
+            <id>github-anthonyquere</id>
+            <url>https://raw.githubusercontent.com/Anthony-Jhoiro/grocery-web/main/repository/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>fr.anthonyquere</groupId>
