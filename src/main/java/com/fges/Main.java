@@ -5,6 +5,9 @@ import com.fges.CLI.CommandLineHandler;
 import com.fges.CLI.CommandOptions;
 import com.fges.Commande.CommandeManager;
 import com.fges.File.File;
+import com.fges.Web.SimpleGroceryShop;
+import fr.anthonyquere.GroceryShopServer;
+import fr.anthonyquere.MyGroceryShop;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +33,24 @@ public class Main {
             System.err.println("Missing Command");
             throw new IllegalArgumentException("Erreur : Commande manquante");
         }
-        // Initialiser le gestionnaire d'arguments
+
+        // Vérifier si la commande est "server"
+        if (args.length > 0 && "server".equals(args[0])) {
+            // Lancer le serveur web
+            int port = 8080;
+            if (args.length > 1) {
+                try {
+                    port = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    System.err.println("Port invalide, utilisation du port 8080 par défaut");
+                }
+            }
+
+            startServer(port);
+            return 0;
+        }
+
+        // Traitement des autres commandes comme avant
         CommandLineHandler cmdHandler = new CommandLineHandler(args);
         CommandOptions options = new CommandOptions();
 
@@ -39,7 +59,6 @@ public class Main {
         options.configureForCommand(potentialCommand);
 
         CommandContext context = new CommandContext();
-
 
         // Parser les arguments
         try {
@@ -54,24 +73,19 @@ public class Main {
         context.setCategory(cmdHandler.getOptionValue("category"));
 
         // Initialiser le fichier
-        // In Main.java, update the file initialization section
         File file = new File();
         if (command.equals("info") && !cmdHandler.hasOption("s")) {
-            // Pour la commande info sans fichier spécifié, utiliser un fichier temporaire
             file.formatAFile("dummy.json");
         } else {
             String fileName = cmdHandler.getOptionValue("s");
 
-            // Check for format option (both short and long form)
             String formatOption = cmdHandler.hasOption("f") ?
                     cmdHandler.getOptionValue("f") :
                     cmdHandler.getOptionValue("format");
 
             if (formatOption != null) {
-                // If format is specified via command line, use it
                 file.formatAFileWithSpecifiedFormat(fileName, formatOption);
             } else {
-                // Otherwise, determine format from file extension
                 file.formatAFile(fileName);
             }
         }
@@ -91,6 +105,24 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Erreur d'E/S: " + e.getMessage());
             return 1;
+        }
+    }
+
+    /**
+     * Démarre le serveur web d'épicerie
+     * @param port Port sur lequel démarrer le serveur
+     */
+    private static void startServer(int port) {
+        MyGroceryShop groceryShop = new SimpleGroceryShop();
+        GroceryShopServer server = new GroceryShopServer(groceryShop);
+        server.start(port);
+
+        System.out.println("Serveur d'épicerie démarré sur http://localhost:" + port);
+
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
