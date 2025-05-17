@@ -22,11 +22,8 @@ Nous avons principalement utilisé le pattern **Command** qui nous a permis d'en
 - Ce rendre dans le "CommandRegistry"  pour ajouter la commande dans notre registre de commandes avec un lien vers la classe de la nouvelle commande
 
 ### Pour ajouter une nouvelle source de données :
-
-- Créer une nouvelle classe qui implémente l'interface FileFormat
-- Implémenter les méthodes read() et write() pour le format voulu
-- Modifier la classe File pour ajouter une condition dans formatAFile() qui détecte le nouveau format
-- Ajouter le nouveau format dans la méthode formatAFileWithSpecifiedFormat() en ajoutant un nouveau case dans le switch
+- Creer une nouvelle classe implementant FileFormat
+- Ajouter une ligne dans formatAFile et formatAFileWithSpecifiedFormat
 
 ### Pour spécifier un magasin où ajouter les courses :
 
